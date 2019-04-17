@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block body %}
+<script src="/static/js/form.js"></script>
+<script src="/static/js/displaycolumns.js"></script>
+{% if redirected == 0 %}
+<div class="loading-modal"></div>
+<script src="/static/js/modal.js"></script>
+<script>
+new Vue({
+		el: '#vue-app',
+		data: {
+				{% for prop,_ in display_columns.all %}
+				{% if prop in display_columns.checked %}
+				{{ prop }}: true,
+				{% else %}
+				{{ prop }}: false,
+				{% endif %}
+				{% endfor %}
+		},
+		methods: {
+				clear: function(event) {
+						{% for prop,_ in display_columns.all %}
+						this.{{ prop }} = false;
+						{% endfor %}
+				}
+		}
+});
+</script>
+<div class="separator"></div>
+
+ {% endif %}
+<script>
+$(document).ready(function() {
+		$('#ocubulum-table').DataTable({
+				columnDefs: [
+                    { visible: true, targets: 0 },
+                    { width: '10%', targets: '_all' }
+                ],
+				data: {{ datatable_results|safe }},
+				columns: [
+				{% for colname in datatable_columns %}
+				{ title: "{{ colname }}" },
+				{% endfor %}
+				],
+				select: 'multiple',
+				dom: 'lfrtBip',
+				buttons: [
+				'selectNone', 
+				{
+						extend: 'excel',
+						filename: new Date().toJSON().slice(0,10).replace(/-/g,'/')
+				},
+				'print',
+				{
+						extend: 'colvis',
+						text: 'Show/Hide'
+				},
+				'colvisRestore'
+						],
+				scrollX: true,
+				fixedColumns: {
+								leftColumns: 2 
+				}
+		});
+});
+</script>
+								<table id="ocubulum-table" class="hover row-border order-column cell-border body-font" width="100%" cellspacing="0"></table>
+								{% endblock %}
