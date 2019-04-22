@@ -25,6 +25,7 @@ def index(request):
 		return render(request, 'dashboard.html', context)
 	return HttpResponse("Invalid request type")
 
+# for POST from anywhere
 @csrf_exempt
 def logrequest(request):
 	if request.method == 'POST':
