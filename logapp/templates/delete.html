@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+WARNING: Clicking the below button will delete all messages. 
+
+<form action = "/delete_all" method = "post">
+	{% csrf_token %}
+  <button type="submit", formmethod="post">Delete All</button>
+</form>
+{% endblock %}

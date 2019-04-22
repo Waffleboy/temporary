@@ -51,3 +51,40 @@ def logrequest(request):
 				return HttpResponse("ERROR: Unknown failure")
 		return HttpResponse("ERROR: Invalid auth key")
 	return HttpResponse("Invalid - POST Only.")
+
+@csrf_exempt
+def logrequest_website(request):
+	if request.method == 'POST':
+		objs = dict(request.POST)
+		print("Got request with {}".format(objs))
+		client = objs['client'][0]
+		log = objs['log'][0]
+
+		if client == "" or log == "":
+			return HttpResponse("ERROR: Client or log empty.")
+		new_log_obj = Log(client=client,log=log)
+		try:
+			res = new_log_obj.save()
+			return HttpResponse("SUCCESS: Log request saved.")
+		except Exception as e:
+			return HttpResponse("ERROR: Unknown failure")
+	return HttpResponse("Invalid - POST Only.")
+
+@login_required(login_url="login/")
+def add_message(request):
+	context = {} # if needed
+	return render(request, 'add.html', context)
+
+
+@login_required(login_url="login/")
+def delete(request):
+	context = {} # if needed
+	return render(request, 'delete.html', context)
+
+@csrf_exempt
+@login_required(login_url='login/')
+def delete_all(request):
+	if request.method == 'POST':
+		Log.objects.all().delete()
+		return HttpResponse("Done!")
+	return HttpResponse("Invalid access - are you logged in?")

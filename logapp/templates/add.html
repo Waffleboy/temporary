@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<!-- Bad practice but temporary-->
+<style>
+	#log{
+		 width: 50%;
+	}
+</style>
+<!-- Form Module-->
+<div class="form">
+	<h2>Add a new Log</h2>
+	<form method="post" action="/log_website">
+		{% csrf_token %}
+		{% if form.errors %}
+			<p>Log or client cannot be empty, please try again</p>
+		{% endif %}
+
+		<label for="log">Log</label>
+		<div class="col-xs-6">
+			<textarea id="log" name="log" cols="10" rows="5"></textarea>
+
+	    	<!--<input id="log" type="text" name="log" value="">-->
+		</div>
+		<div class="col-xs-4">
+			<label for="client">Client</label>
+		</div>
+		<input id="client" type="text" name="client" value="">
+		<div class="col-xs-4">
+		    <input type="submit" value="Submit">
+		</div>
+
+
+<!-- 		<div class="title"><h3>Log</h2></div>
+		<div class="col-xs-6">
+			<textarea class="form-control" id="log" rows="5"></textarea>
+		</div>
+		<div class="title"><h3>Client</h3></div>
+		<textarea class="form-control" id="client" rows="1"></textarea>
+		<h3></h3>
+		<button>Submit</button>
+		<input type="hidden" name="next" value="{{ next }}" /> -->
+	</form>
+</div>
+
+{% endblock %}
